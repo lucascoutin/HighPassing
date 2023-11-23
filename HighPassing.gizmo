@@ -1,5 +1,5 @@
-#! C:/Program Files/Nuke14.0v3/nuke-14.0.3.dll -nx
-version 14.0 v3
+#! C:/Program Files/Nuke14.0v5/nuke-14.0.5.dll -nx
+version 14.0 v5
 Gizmo {
  tile_color 0xff
  addUserKnob {20 User l "High Passing"}
@@ -7,14 +7,13 @@ Gizmo {
  addUserKnob {41 size l Size T Blur1.size}
  addUserKnob {41 max_size l "Luma Blur" T Blur3.max_size}
  addUserKnob {26 ""}
- addUserKnob {41 contrast_1 l Contrast T ColorCorrect1.contrast}
  addUserKnob {41 contrast l "Contrast Adjust" T Grade1.contrast}
- addUserKnob {41 midtones l "Midtones Adjust" T Grade1.midtones}
+ addUserKnob {41 contrast_1 l "Midtone Adjust" T ColorCorrect1.contrast}
  addUserKnob {20 info l Info}
- addUserKnob {26 description l "" +STARTLINE T "HighPassing generates a high pass filter that enhance hidden details to help 2D tracking."}
+ addUserKnob {26 description l "" +STARTLINE T "HighPassing generates a high pass filter that enhance hidden details to help 2D tracking.\nAdd a Reduce Noise and/or a Denoise before this gizmo for smoother results."}
  addUserKnob {26 ""}
  addUserKnob {26 created l "" +STARTLINE T "Created by <b><a href=\"https://vimeo.com/lucascoutinho\">Lucas L. Coutinho</a></b>"}
- addUserKnob {26 version l "" +STARTLINE T "Version: <b>v02</b>"}
+ addUserKnob {26 version l "" +STARTLINE T "Version: <b>v03</b>"}
  addUserKnob {26 year l "" +STARTLINE T "Year: 2023"}
 }
  StickyNote {
@@ -31,7 +30,14 @@ Gizmo {
   inputs 0
   name Source
   xpos 385
-  ypos -851
+  ypos -970
+ }
+ SoftClip {
+  conversion "logarithmic compress"
+  softclip_min 0
+  name SoftClip1
+  xpos 385
+  ypos -849
  }
  Shuffle2 {
   fromInput1 {{0} B}
@@ -49,6 +55,12 @@ Gizmo {
   label "Alpha = 1"
   xpos 385
   ypos -681
+ }
+ Clamp {
+  name Clamp1
+  selected true
+  xpos 385
+  ypos -629
  }
  Colorspace {
   colorspace_out YPbPr
@@ -69,7 +81,7 @@ Gizmo {
   xpos 419
   ypos -210
  }
-set N853b0c00 [stack 0]
+set N6411000 [stack 0]
  Dot {
   name Dot15
   xpos 565
@@ -89,13 +101,13 @@ set N853b0c00 [stack 0]
   xpos 565
   ypos 207
  }
-set N853b1800 [stack 0]
+set N6410400 [stack 0]
  Dot {
   name Dot17
   xpos 565
   ypos 310
  }
-push $N853b0c00
+push $N6411000
  Shuffle {
   red green
   blue green
@@ -110,13 +122,13 @@ push $N853b0c00
   xpos 419
   ypos 22
  }
-set N83ad0400 [stack 0]
+set N63e3800 [stack 0]
  Dot {
   name Dot19
   xpos 419
   ypos 112
  }
-push $N853b0c00
+push $N6411000
  Dot {
   name Dot41
   xpos 256
@@ -138,9 +150,9 @@ push $N853b0c00
   ypos -63
   addUserKnob {20 User}
   addUserKnob {7 max_size R 0 12}
-  max_size 8
+  max_size 4
  }
-push $N83ad0400
+push $N63e3800
  ShuffleCopy {
   inputs 2
   red red
@@ -156,7 +168,7 @@ push $N83ad0400
   xpos 222
   ypos 97
  }
-push $N853b1800
+push $N6410400
  ShuffleCopy {
   inputs 2
   red red
@@ -190,13 +202,13 @@ push $N853b1800
   xpos 256
   ypos 569
  }
-set N653c9000 [stack 0]
+set N63e3000 [stack 0]
  Dot {
   name Dot10
   xpos 366
   ypos 569
  }
-set N653c9400 [stack 0]
+set N63e3400 [stack 0]
  Dot {
   name Dot9
   xpos 476
@@ -211,7 +223,7 @@ set N653c9400 [stack 0]
   xpos 442
   ypos 719
  }
-push $N653c9400
+push $N63e3400
  Shuffle2 {
   fromInput1 {{0} B}
   fromInput2 {{0} B}
@@ -221,7 +233,7 @@ push $N653c9400
   xpos 332
   ypos 719
  }
-push $N653c9000
+push $N63e3000
  Shuffle2 {
   fromInput1 {{0} B}
   fromInput2 {{0} B}
@@ -243,7 +255,7 @@ push $N653c9000
   xpos 318
   ypos 966
  }
-set N83a00c00 [stack 0]
+set N6381400 [stack 0]
  Dot {
   name Dot6
   xpos 174
@@ -267,7 +279,7 @@ set N83a00c00 [stack 0]
   xpos 174
   ypos 1209
  }
-push $N83a00c00
+push $N6381400
  Merge2 {
   inputs 2
   operation average
@@ -285,13 +297,13 @@ push $N83a00c00
  Grade {
   blackpoint {{contrast}}
   whitepoint {{1-contrast}}
-  gamma {{midtones}}
+  gamma 0.56
   name Grade1
   xpos 284
   ypos 1374
   addUserKnob {20 User}
   addUserKnob {7 contrast R 0 0.4}
-  contrast 0.36
+  contrast 0.3
   addUserKnob {7 midtones R 0 0.8}
   midtones 0.56
  }
